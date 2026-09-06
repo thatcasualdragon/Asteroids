@@ -9,6 +9,8 @@ class Player(CircleShape):
         self.rotation = 0
         self.x = x
         self.y = y
+        self.SHOOT_TIMER = 0
+        self.PLAYER_SHOOT_COOLDOWN_SECONDS = 0.3
 
     # in the Player class
     def triangle(self) -> list[pygame.Vector2]:
@@ -39,6 +41,7 @@ class Player(CircleShape):
             self.move(0 - dt)
         if keys[pygame.K_SPACE]:
             self.shoot()
+        self.SHOOT_TIMER -= dt
 
     #math for moving up and down on screen
     def move(self, dt):
@@ -48,8 +51,10 @@ class Player(CircleShape):
         self.position += rotated_with_speed_vector
 
     def shoot(self):
-        shot = Shot(self.x, self.y)
-        shot_vector = pygame.Vector2(0,1)
-        rotated_shot = shot_vector.rotate(self.rotation)
-        rotated_with_speed_shot = rotated_shot * constants.PLAYER_SHOOT_SPEED
-        shot.velocity = rotated_with_speed_shot
+        if self.SHOOT_TIMER <= 0:
+            self.SHOOT_TIMER = self.PLAYER_SHOOT_COOLDOWN_SECONDS
+            shot = Shot(self.x, self.y)
+            shot_vector = pygame.Vector2(0,1)
+            rotated_shot = shot_vector.rotate(self.rotation)
+            rotated_with_speed_shot = rotated_shot * constants.PLAYER_SHOOT_SPEED
+            shot.velocity = rotated_with_speed_shot
