@@ -6,7 +6,6 @@ import logger
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 import sys
-
 from shot import Shot
 
 def main():
@@ -48,6 +47,14 @@ def main():
                 logger.log_event("player_hit")
                 print("Game over!")
                 sys.exit()
+
+        for asteroid in asteroids:
+            for shot in shots:
+                if asteroid.collides_with(shot):
+                    logger.log_event("asteroid_shot")
+                    pygame.sprite.Sprite.kill(shot)
+                    pygame.sprite.Sprite.kill(asteroid)
+
 
         for object in drawable:
             object.draw(screen)
